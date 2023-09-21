@@ -1,9 +1,10 @@
------ ANTES DE EMPEZAR -----
+# ----- ANTES DE EMPEZAR -----
 
 >   Para poder utilizar el framework Spark deberemos incluirlo
     en la sección de dependencias de Maven de nuestro archivo pom.xml:
 
-    ```java
+    ```
+
      <dependencies>
        ...
        <dependency>
@@ -17,9 +18,12 @@
 
     * Detalle: en ciertas ocasiones maven no reconoce la dependencia de inmediato, en estos casos hay
       que correr el siguiente comando en la terminal local (estando en el repositorio de nuestro proyecto)
-      '''java
+
+      '''
+
       mvn clean install
       '''
+
       y en algunas ocasiones tambien hay que reiniciar el IDE.
 
  --- POR AHORA CON ESO ES SUFICIENTE ---
@@ -32,7 +36,7 @@
  >  el puerto en que nuestro servidor escuchará los pedidos HTTP;
     la respuesta que dará cuando recibamos un pedido al recurso /,también conocido como la raíz.
 
-    ```java
+    ```
      import spark.Spark;
 
      public class Main {
@@ -45,11 +49,13 @@
 
 > Una vez que ya esta el main se corre (boton derecho en main -> run 'Main.main()')
 > Cuando lo corres te tira en la terminal lo siguiente:
-    '''java
+
+    '''
     SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
     SLF4J: Defaulting to no-operation (NOP) logger implementation
     SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
     '''
+
     Pero no hay que darle bola. Cuando corre el main ya esta corriendo el servidor.
 
 > Ya con el main corriendo se pueden realizar las consultas, por ejemplo:
@@ -65,11 +71,11 @@
 
 
 
---- RETORNO DE HTML ---
+# --- RETORNO DE HTML ---
 
 Para que retorne html hay que modificar la clase main:
 
-    ```java
+    ```
     import spark.Spark;
 
 
@@ -84,14 +90,14 @@ Para que retorne html hay que modificar la clase main:
     '''
 
 
---- VISTA DINAMICA ---
+# --- VISTA DINAMICA ---
 
 >   ¿Y qué sucedería si en lugar de dar una respuesta estática (es decir, que siempre es igual),
     quisiéramos dar una respuesta dinámica, que dependa de un parámetro  HTTP (query param)?
     Para ello contamos con mensaje como queryParamOrDefault,
     que nos permite justamente leer el valor de un parámetro dado.
 
-    '''java
+    '''
     import spark.Spark;
 
 
@@ -107,14 +113,14 @@ Para que retorne html hay que modificar la clase main:
 
 >   Si ahora consultamos al recurso raíz como veníamos haciéndolo, obtendremos la siguiente respuesta…
 
-    '''java
+    '''
     $ curl localhost:9000/
     <h1>¡Hola Mundo!</h1><p>Esta es nuestra primera respuesta HTML</p>
     '''
 
 >   … pero si lo hacemos indicando un valor para el parámetro nombre, obtendremos lo siguiente:
 
-    '''java
+    '''
     $ curl localhost:9000/?nombre=Feli
     <h1>¡Hola Feli!</h1><p>Esta es nuestra primera respuesta HTML</p>
     '''
@@ -123,7 +129,7 @@ Para que retorne html hay que modificar la clase main:
     ¡y tenés razón! A medida que nuestro HTML se vuelva más complejo, nuestro código Java también lo será.
     Acá es donde llega el momento de introducir las plantillas.
 
---- PLANTILLAS ---
+# --- PLANTILLAS ---
 
 >   Cuando lidiamos con código de vista, un problema común es, justamente, lidiar con los componentes
     que la conforman: títulos, botones, párrafos, listas, imágenes, casillas de verificación, etc.
@@ -152,12 +158,12 @@ Para que retorne html hay que modificar la clase main:
     * Jinja (Python)
 
 
---- HANDLEBARS ---
+# --- HANDLEBARS ---
 
 >   En nuestro caso, utilizaremos Handlebars, el cual está disponible en varios lenguajes de programación,
     Java incluído. Lo primero que haremos será incluirlo a nuestro proyecto:
 
-    '''java
+    '''
      <dependencies>
        ...
        <dependency>
@@ -171,7 +177,7 @@ Para que retorne html hay que modificar la clase main:
 
 >   Ahora podremos crear un motor de plantillas (template engine)...
 
-    '''java
+    '''
     import spark.ModelAndView;
     import spark.Spark;
     import spark.template.handlebars.HandlebarsTemplateEngine;
@@ -195,7 +201,7 @@ Para que retorne html hay que modificar la clase main:
     2- Indicar a Spark que esta ruta será servida empleando el motor de plantillas previamente creado.
 
 
-     '''java
+     '''
      import spark.ModelAndView;
      import spark.Spark;
      import spark.template.handlebars.HandlebarsTemplateEngine;
@@ -223,7 +229,7 @@ Para que retorne html hay que modificar la clase main:
     El contenido de este archivo será HTML, pero insertando {{this}} en el lugar en donde irá el valor
     del modelo (el nombre de la persona):
 
-    '''java
+    '''
     <h1>¡Hola {{this}}!</h1>
     <p>Esta es nuestra primera respuesta HTML</p>
     '''
@@ -241,7 +247,7 @@ Para que retorne html hay que modificar la clase main:
 
 
 
---- MVC RECARGADO ---
+# --- MVC RECARGADO ---
 
 >   Ejemplo mas complejo.
 
@@ -251,7 +257,7 @@ Para que retorne html hay que modificar la clase main:
     Por ejemplo, si queremos que haya una ruta de bienvenida, otra de despedida, y que la ruta raíz redirija
     a la ruta de bienvenida, podríamos hacer lo siguiente:
 
-    '''java
+    '''
     import spark.ModelAndView;
     import spark.Spark;
     import spark.template.handlebars.HandlebarsTemplateEngine;
@@ -296,7 +302,7 @@ Para que retorne html hay que modificar la clase main:
 
     Si además creamos la nueva plantilla para despedidas (src/main/resources/despedida.html.hbs) …
 
-    '''java
+    '''
     <h1>¡Adiós {{this}}, que la fuerza te acompañe!</h1>
     <p>Nos veremos de nuevo en otro apunte</p>
     '''
@@ -305,7 +311,7 @@ Para que retorne html hay que modificar la clase main:
 
     * Raíz (observar cómo el primer pedido genera una redirección sin contenido y ésta un nuevo pedido):
 
-    '''java
+    '''
     $ curl http://localhost:9000/ -iL
     HTTP/1.1 302 Found
     Date: Fri, 08 Oct 2021 18:42:24 GMT
@@ -327,7 +333,7 @@ Para que retorne html hay que modificar la clase main:
 
     * Bienvenida (observar el uso de %20 para representar el espacio, empleando URL encoding):
 
-    '''java
+    '''
     $ curl http://localhost:9000/bienvenida?nombre=Todo%20el%20mundo -iL
     HTTP/1.1 200 OK
     Date: Fri, 08 Oct 2021 18:47:40 GMT
@@ -342,7 +348,7 @@ Para que retorne html hay que modificar la clase main:
 
     * Despedida:
 
-    '''java
+    '''
     $ curl http://localhost:9000/despedida?nombre=lu -iL
     HTTP/1.1 200 OK
     Date: Fri, 08 Oct 2021 18:52:06 GMT
@@ -373,8 +379,7 @@ Para que retorne html hay que modificar la clase main:
 
     HomeController:
 
-    '''java
-
+    '''
     package controllers;
 
 
@@ -392,8 +397,7 @@ Para que retorne html hay que modificar la clase main:
 
     SaludoController:
 
-    '''java
-
+    '''
     package controllers;
 
 
@@ -427,7 +431,7 @@ Para que retorne html hay que modificar la clase main:
     Luego, en Main instanciaremos los controladores y reemplazaremos las lambdas por referencias
     a los métodos correspondientes:
 
-    '''java
+    '''
     import controllers.HomeController;
     import controllers.SaludoController;
 
