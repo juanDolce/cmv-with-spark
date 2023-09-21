@@ -4,7 +4,6 @@
     en la sección de dependencias de Maven de nuestro archivo pom.xml:
 
     ```
-
      <dependencies>
        ...
        <dependency>
@@ -19,10 +18,10 @@
     * Detalle: en ciertas ocasiones maven no reconoce la dependencia de inmediato, en estos casos hay
       que correr el siguiente comando en la terminal local (estando en el repositorio de nuestro proyecto)
 
-      '''
-
+     
+      ```
       mvn clean install
-      '''
+      ```
 
       y en algunas ocasiones tambien hay que reiniciar el IDE.
 
@@ -50,11 +49,11 @@
 > Una vez que ya esta el main se corre (boton derecho en main -> run 'Main.main()')
 > Cuando lo corres te tira en la terminal lo siguiente:
 
-    '''
+    ```
     SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
     SLF4J: Defaulting to no-operation (NOP) logger implementation
     SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
-    '''
+    ```
 
     Pero no hay que darle bola. Cuando corre el main ya esta corriendo el servidor.
 
@@ -87,7 +86,7 @@ Para que retorne html hay que modificar la clase main:
                        + "<p>Esta es nuestra primera respuesta HTML</p>");
      }
     }
-    '''
+    ```
 
 
 # --- VISTA DINAMICA ---
@@ -97,7 +96,7 @@ Para que retorne html hay que modificar la clase main:
     Para ello contamos con mensaje como queryParamOrDefault,
     que nos permite justamente leer el valor de un parámetro dado.
 
-    '''
+    ```
     import spark.Spark;
 
 
@@ -109,21 +108,21 @@ Para que retorne html hay que modificar la clase main:
          + "<p>Esta es nuestra primera respuesta HTML</p>");
      }
     }
-    '''
+    ```
 
 >   Si ahora consultamos al recurso raíz como veníamos haciéndolo, obtendremos la siguiente respuesta…
 
-    '''
+    ```
     $ curl localhost:9000/
     <h1>¡Hola Mundo!</h1><p>Esta es nuestra primera respuesta HTML</p>
-    '''
+    ```
 
 >   … pero si lo hacemos indicando un valor para el parámetro nombre, obtendremos lo siguiente:
 
-    '''
+    ```
     $ curl localhost:9000/?nombre=Feli
     <h1>¡Hola Feli!</h1><p>Esta es nuestra primera respuesta HTML</p>
-    '''
+    ```
 
 >   Quizás a esta altura estés pensando “esto de concatenar strings para generar HTML no pinta bien”,
     ¡y tenés razón! A medida que nuestro HTML se vuelva más complejo, nuestro código Java también lo será.
@@ -163,7 +162,7 @@ Para que retorne html hay que modificar la clase main:
 >   En nuestro caso, utilizaremos Handlebars, el cual está disponible en varios lenguajes de programación,
     Java incluído. Lo primero que haremos será incluirlo a nuestro proyecto:
 
-    '''
+    ```
      <dependencies>
        ...
        <dependency>
@@ -173,11 +172,11 @@ Para que retorne html hay que modificar la clase main:
        </dependency>
        ...
     </dependencies>
-    '''
+    ```
 
 >   Ahora podremos crear un motor de plantillas (template engine)...
 
-    '''
+    ```
     import spark.ModelAndView;
     import spark.Spark;
     import spark.template.handlebars.HandlebarsTemplateEngine;
@@ -190,7 +189,7 @@ Para que retorne html hay que modificar la clase main:
        ...
      }
     }
-    '''
+    ```
 
 >   ...y en lugar de generar un HTML directamente, lo que haremos será:
 
@@ -201,7 +200,7 @@ Para que retorne html hay que modificar la clase main:
     2- Indicar a Spark que esta ruta será servida empleando el motor de plantillas previamente creado.
 
 
-     '''
+     ```
      import spark.ModelAndView;
      import spark.Spark;
      import spark.template.handlebars.HandlebarsTemplateEngine;
@@ -221,7 +220,7 @@ Para que retorne html hay que modificar la clase main:
                 engine); //2
       }
      }
-    '''
+    ```
 
 >   Finalmente, ahora llegó el turno de crear nuestra plantilla handlebars, que guardaremos
     en src/main/resources/templates/bienvenida.html.hbs (tendremos que crear antes los directorios
@@ -229,10 +228,10 @@ Para que retorne html hay que modificar la clase main:
     El contenido de este archivo será HTML, pero insertando {{this}} en el lugar en donde irá el valor
     del modelo (el nombre de la persona):
 
-    '''
+    ```
     <h1>¡Hola {{this}}!</h1>
     <p>Esta es nuestra primera respuesta HTML</p>
-    '''
+    ```
 
     ¡Y eso es todo! En resumen, ahora cuando Spark atienda el pedido HTTP en /:
 
@@ -257,7 +256,7 @@ Para que retorne html hay que modificar la clase main:
     Por ejemplo, si queremos que haya una ruta de bienvenida, otra de despedida, y que la ruta raíz redirija
     a la ruta de bienvenida, podríamos hacer lo siguiente:
 
-    '''
+    ```
     import spark.ModelAndView;
     import spark.Spark;
     import spark.template.handlebars.HandlebarsTemplateEngine;
@@ -292,7 +291,7 @@ Para que retorne html hay que modificar la clase main:
            engine);
      }
     }
-    '''
+    ```
 
     Acá suceden dos cosas novedosas:
         * por un lado, esta vez nuestro main soporta múltiples rutas: /, /bienvenida y /despedida
@@ -302,16 +301,16 @@ Para que retorne html hay que modificar la clase main:
 
     Si además creamos la nueva plantilla para despedidas (src/main/resources/despedida.html.hbs) …
 
-    '''
+    ```
     <h1>¡Adiós {{this}}, que la fuerza te acompañe!</h1>
     <p>Nos veremos de nuevo en otro apunte</p>
-    '''
+    ```
 
     … podremos ahora ver en acción a todas nuestras rutas:
 
     * Raíz (observar cómo el primer pedido genera una redirección sin contenido y ésta un nuevo pedido):
 
-    '''
+    ```
     $ curl http://localhost:9000/ -iL
     HTTP/1.1 302 Found
     Date: Fri, 08 Oct 2021 18:42:24 GMT
@@ -329,11 +328,11 @@ Para que retorne html hay que modificar la clase main:
 
     <h1>¡Hola Mundo!</h1>
     <p>Esta es nuestra primera respuesta HTML</p>
-    '''
+    ```
 
     * Bienvenida (observar el uso de %20 para representar el espacio, empleando URL encoding):
 
-    '''
+    ```
     $ curl http://localhost:9000/bienvenida?nombre=Todo%20el%20mundo -iL
     HTTP/1.1 200 OK
     Date: Fri, 08 Oct 2021 18:47:40 GMT
@@ -344,11 +343,11 @@ Para que retorne html hay que modificar la clase main:
 
     <h1>¡Hola Todo el mundo!</h1>
     <p>Esta es nuestra primera respuesta HTML</p>
-    '''
+    ```
 
     * Despedida:
 
-    '''
+    ```
     $ curl http://localhost:9000/despedida?nombre=lu -iL
     HTTP/1.1 200 OK
     Date: Fri, 08 Oct 2021 18:52:06 GMT
@@ -359,7 +358,7 @@ Para que retorne html hay que modificar la clase main:
 
     <h1>¡Adios lu, que la fuerza te acompañe!</h1>
     <p>Nos veremos de nuevo en otro apunte</p>
-    '''
+    ```
 
     ¡Todo funciona! ¿Pero qué problema trae esta estrategia de solución? ¿Qué pasará cuando haya más y más rutas?
     ¡Nuestro Main crecerá sin control!
@@ -379,7 +378,7 @@ Para que retorne html hay que modificar la clase main:
 
     HomeController:
 
-    '''
+    ```
     package controllers;
 
 
@@ -393,11 +392,11 @@ Para que retorne html hay que modificar la clase main:
        return null;
      }
     }
-    '''
+    ```
 
     SaludoController:
 
-    '''
+    ```
     package controllers;
 
 
@@ -420,7 +419,7 @@ Para que retorne html hay que modificar la clase main:
                "despedida.html.hbs");
      }
     }
-    '''
+    ```
 
     Como podemos apreciar, hemos convertido en métodos de instancia al código que anteriormente
     estaba en bloques de código. Y en el proceso, hemos tenido que explicitar los tipos de datos:
@@ -431,7 +430,7 @@ Para que retorne html hay que modificar la clase main:
     Luego, en Main instanciaremos los controladores y reemplazaremos las lambdas por referencias
     a los métodos correspondientes:
 
-    '''
+    ```
     import controllers.HomeController;
     import controllers.SaludoController;
 
@@ -458,7 +457,7 @@ Para que retorne html hay que modificar la clase main:
        Spark.get("/despedida", saludo::despedida, engine);
      }
     }
-    '''
+    ```
 
     De esta forma, cada una de estas clases serán mucho más cohesivas y fáciles de mantener y probar.
     Es más: ahora tendremos más herramientas para evitar la repetición de lógica!.
