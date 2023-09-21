@@ -50,19 +50,21 @@ public class Main {
 Una vez que ya esta el main se corre (boton derecho en main -> run 'Main.main()')
 Cuando lo corres te tira en la terminal lo siguiente:
 
-   
+```
     SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
     SLF4J: Defaulting to no-operation (NOP) logger implementation
     SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
-    
+```
 
 Pero no hay que darle bola. Cuando corre el main ya esta corriendo el servidor.
 
 Ya con el main corriendo se pueden realizar las consultas, por ejemplo:
 
+```
     http://127.0.0.1:9000/: consulta el recurso raíz del servidor 127.0.0.1 (nuetra propia computadora) en el puerto 9000
     http://localhost:9000/: equivalente al anterior, dado que localhost es un nombre de dominio que sirve de alias a 127.0.0.1
     http://localhost:9000: también equivalente al anterior, dado que el recurso raíz es también el recurso por defecto, y por tanto podemos omitir la /.
+```
 
 Si se pone alguna de esas consultas en el navegador va a aparecer una respuesta del tipo 'hola mundo!'
 
@@ -115,17 +117,17 @@ public class Main {
 
 Si ahora consultamos al recurso raíz como veníamos haciéndolo, obtendremos la siguiente respuesta…
 
-    
+```
     $ curl localhost:9000/
     <h1>¡Hola Mundo!</h1><p>Esta es nuestra primera respuesta HTML</p>
-    
+```
 
  … pero si lo hacemos indicando un valor para el parámetro nombre, obtendremos lo siguiente:
 
-    
+```
     $ curl localhost:9000/?nombre=Feli
     <h1>¡Hola Feli!</h1><p>Esta es nuestra primera respuesta HTML</p>
-    
+```
 
 Quizás a esta altura estés pensando “esto de concatenar strings para generar HTML no pinta bien”,
 ¡y tenés razón! A medida que nuestro HTML se vuelva más complejo, nuestro código Java también lo será.
@@ -165,7 +167,7 @@ Estos archivos, denominados plantillas  (o templates, en inglés), están presen
 En nuestro caso, utilizaremos Handlebars, el cual está disponible en varios lenguajes de programación,
 Java incluído. Lo primero que haremos será incluirlo a nuestro proyecto:
 
-    
+```
      <dependencies>
        ...
        <dependency>
@@ -175,7 +177,7 @@ Java incluído. Lo primero que haremos será incluirlo a nuestro proyecto:
        </dependency>
        ...
     </dependencies>
-    
+```
 
 Ahora podremos crear un motor de plantillas (template engine)...
 
@@ -235,10 +237,10 @@ resources y templates).
 El contenido de este archivo será HTML, pero insertando {{this}} en el lugar en donde irá el valor
 del modelo (el nombre de la persona):
 
-    
+```  
     <h1>¡Hola {{this}}!</h1>
     <p>Esta es nuestra primera respuesta HTML</p>
-    
+```    
 
 ¡Y eso es todo! En resumen, ahora cuando Spark atienda el pedido HTTP en /:
 
@@ -310,16 +312,16 @@ Acá suceden dos cosas novedosas:
 
 Si además creamos la nueva plantilla para despedidas (src/main/resources/despedida.html.hbs) …
 
-    
+```   
     <h1>¡Adiós {{this}}, que la fuerza te acompañe!</h1>
     <p>Nos veremos de nuevo en otro apunte</p>
-    
+```
 
  … podremos ahora ver en acción a todas nuestras rutas:
 
 * Raíz (observar cómo el primer pedido genera una redirección sin contenido y ésta un nuevo pedido):
 
-    
+```  
     $ curl http://localhost:9000/ -iL
     HTTP/1.1 302 Found
     Date: Fri, 08 Oct 2021 18:42:24 GMT
@@ -337,11 +339,11 @@ Si además creamos la nueva plantilla para despedidas (src/main/resources/desped
 
     <h1>¡Hola Mundo!</h1>
     <p>Esta es nuestra primera respuesta HTML</p>
-    
+```  
 
 * Bienvenida (observar el uso de %20 para representar el espacio, empleando URL encoding):
 
-    
+```
     $ curl http://localhost:9000/bienvenida?nombre=Todo%20el%20mundo -iL
     HTTP/1.1 200 OK
     Date: Fri, 08 Oct 2021 18:47:40 GMT
@@ -352,11 +354,11 @@ Si además creamos la nueva plantilla para despedidas (src/main/resources/desped
 
     <h1>¡Hola Todo el mundo!</h1>
     <p>Esta es nuestra primera respuesta HTML</p>
-    
+```
 
 * Despedida:
 
-    
+```
     $ curl http://localhost:9000/despedida?nombre=lu -iL
     HTTP/1.1 200 OK
     Date: Fri, 08 Oct 2021 18:52:06 GMT
@@ -367,7 +369,7 @@ Si además creamos la nueva plantilla para despedidas (src/main/resources/desped
 
     <h1>¡Adios lu, que la fuerza te acompañe!</h1>
     <p>Nos veremos de nuevo en otro apunte</p>
-    
+``` 
 
 ¡Todo funciona! ¿Pero qué problema trae esta estrategia de solución? ¿Qué pasará cuando haya más y más rutas?
 ¡Nuestro Main crecerá sin control!
